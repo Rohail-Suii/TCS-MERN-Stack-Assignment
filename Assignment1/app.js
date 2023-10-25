@@ -3,10 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose=require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var emprouter = require('./routes/employees');
+var teamrouter = require('./routes/teams');
 
+mongoose.connect('mongodb://0.0.0.0:27017/Assignmentdb',{
+  useNewUrlParser:true,
+  useUnifiedTopology:true
+}).then(()=>{
+  console.log("connected to database");
+}).catch((err)=>{
+  console.log("error connecting to database");
+});
 var app = express();
 
 // view engine setup
@@ -21,7 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/employees',emprouter);
+app.use('/teams',teamrouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
